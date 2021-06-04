@@ -1,10 +1,12 @@
-import Image
+from PIL import Image
 from random import randint
-import numpy
-import sys
 from helper import *
+import json
+import base64
 
-im = Image.open('input/' + sys.argv[1])
+image_name = "pic5.png"
+
+im = Image.open('input/' + image_name)
 pix = im.load()
 
 #Obtaining the RGB matrices
@@ -42,6 +44,17 @@ for a in Kc:
 	f.write(str(a) + '\n')
 f.write('ITER_MAX : \n')
 f.write(str(ITER_MAX) + '\n')
+
+dict = {}
+dict["Vector Kr"]=Kr
+dict["Vector Kc"]=Kc
+dict["ITER_MAX"]=ITER_MAX
+
+json_string= json.dumps(dict)
+print(type(json_string))
+encode = base64.b64encode(json_string.encode())
+with open("keys_encoded.txt", "wb") as binary_file:
+    binary_file.write(encode)
 
 
 for iterations in range(ITER_MAX):
@@ -117,7 +130,7 @@ for i in range(m):
 	for j in range(n):
 		pix[i,j] = (r[i][j],g[i][j],b[i][j])
 
-im.save('encrypted_images/' + sys.argv[1])
+im.save('encrypted_images/' + image_name)
 
 
 
